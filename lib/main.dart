@@ -1,15 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Add.dart';
-import 'package:flutter_application_1/complete.dart';
 import 'package:flutter_application_1/firebase_options.dart';
+import 'package:flutter_application_1/firestore_list.dart';
 import 'package:flutter_application_1/home.dart';
 import 'package:flutter_application_1/naviagtion1.dart';
-import 'package:flutter_application_1/option.dart';
-import 'package:flutter_application_1/profileScreen.dart';
-import 'package:flutter_application_1/signin.dart';
-import 'package:flutter_application_1/signup.dart';
 import 'package:flutter_application_1/navigation.dart';
+import 'package:flutter_application_1/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,17 +19,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: 'Signin',
+        initialRoute: 'splash',
         routes: {
-          'signup': (context) => const signup(),
-          'Signin': (context) => const Signin(),
-          'Home': (context) => const Home(),
+          'Home': (context) => Home(),
+          'firestore_list': (context) => const firestore_list(),
+          'splash': (context) => const Splash(),
           'navigation': (context) => const navigation(),
-          'profileScreen': (context) => const profileScreen(),
-          'Add': (context) => const add(),
-          'option': (context) => const option(),
           'naviagation1': (context) => const naviagation1(),
-          'complete': (context) => const complete(),
         });
   }
 }

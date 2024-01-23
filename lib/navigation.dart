@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_application_1/home.dart";
 import "package:flutter_application_1/option.dart";
-import "package:flutter_application_1/profileScreen.dart";
+import 'package:flutter_application_1/Admin_profile.dart';
 
 class navigation extends StatefulWidget {
   const navigation({super.key});
@@ -15,7 +16,12 @@ class _navigationState extends State<navigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+    child:Scaffold(
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (int index) {
             setState(() {
@@ -37,14 +43,7 @@ class _navigationState extends State<navigation> {
               icon: Icon(Icons.perm_identity),
               label: 'Profile',
             ),
-            // NavigationDestination(
-            //   icon: Icon(Icons.scoreboard_rounded),
-            //   label: 'Live Score',
-            // ),
-            // NavigationDestination(
-            //   icon: Icon(Icons.person_rounded),
-            //   label: 'Profile',
-            // ),
+           
           ],
         ),
         body: [
@@ -62,6 +61,7 @@ class _navigationState extends State<navigation> {
               color: const Color.fromARGB(255, 76, 153, 175),
               alignment: Alignment.center,
               child: const profileScreen()),
-        ][currentPageIndex]);
+        ][currentPageIndex]
+    ),);
   }
 }

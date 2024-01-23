@@ -1,4 +1,7 @@
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:flutter_application_1/firestore/database.dart";
 import "package:flutter_application_1/open.dart";
 
 class add extends StatefulWidget {
@@ -9,6 +12,87 @@ class add extends StatefulWidget {
 }
 
 class _addState extends State<add> {
+  Stream? FoodStream;
+  getontheload() async {
+    FoodStream = await DatabaseMethods().getFoodDetails();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getontheload();
+    super.initState();
+  }
+
+  Widget allFoodDetails() {
+    return StreamBuilder(
+        stream: FoodStream,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  itemCount: snapshot.data.docs.length,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot ds = snapshot.data.docs[index];
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 6, top: 7),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => open()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.only(left: 6, right: 3),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(2))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              height: 100,
+                              width: 150,
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          'https://t4.ftcdn.net/jpg/00/49/38/95/360_F_49389597_6VboA8kRehV5naoKBLlvdeyf3Y8vclSZ.jpg'))),
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  "food:" + ds["food"],
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 19),
+                                ),
+                                Text(
+                                  "persons:" + ds["persons"],
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  "Cooking time:" + ds["Cooking time"],
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                    //           ),
+
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // );
+                  })
+              : Container();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,105 +235,20 @@ class _addState extends State<add> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: 30,
             ),
             Expanded(
               child: Container(
+                // margin: EdgeInsets.only(bottom: 2),
                 color: Colors.white,
                 child: Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(1.0)),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const open()));
-                              },
-                              child: Container(
-                                width: 150,
-                                height: 100,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                          'https://www.kagomeindia.com/wp-content/uploads/Blog4.jpg')),
-                                ),
-                              ),
-                            ),
-                            const Column(
-                              children: [
-                                Text(
-                                  'Paneer Masala',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 19),
-                                ),
-                                Text(
-                                  'food for 23.0 persons',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Text(
-                                  'Cooking time 2:50 PM',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            height: 100,
-                            width: 150,
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://t4.ftcdn.net/jpg/02/95/09/39/360_F_295093993_O8Bab6DsZiQvs4PRLUtxtMK28EZ2u4M8.jpg'))),
-                          ),
-                          const Column(
-                            children: [
-                              Text(
-                                'Chole Kulche',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 19),
-                              ),
-                              Text(
-                                'food for 23.0 persons',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              Text(
-                                'Cooking time 2:50 PM',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: Column(children: [
+                    Expanded(child: allFoodDetails()),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                    ),
+                  ]),
                 ),
               ),
             ),

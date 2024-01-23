@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_application_1/Add.dart";
 import "package:flutter_application_1/complete.dart";
-import "package:flutter_application_1/profileScreen.dart";
+import 'package:flutter_application_1/Admin_profile.dart';
 
 class naviagation1 extends StatefulWidget {
   const naviagation1({super.key});
@@ -15,7 +16,12 @@ class _naviagation1State extends State<naviagation1> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+    child:Scaffold(
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (int index) {
             setState(() {
@@ -30,7 +36,7 @@ class _naviagation1State extends State<naviagation1> {
               label: 'Home',
             ),
             NavigationDestination(
-              icon: Icon(Icons.ac_unit_rounded),
+              icon: Icon(Icons.done_all),
               label: 'complete',
             ),
             NavigationDestination(
@@ -61,6 +67,7 @@ class _naviagation1State extends State<naviagation1> {
               color: Color.fromARGB(255, 11, 154, 225),
               alignment: Alignment.center,
               child: const profileScreen()),
-        ][currentPageIndex]);
+        ][currentPageIndex]
+    ),);
   }
 }

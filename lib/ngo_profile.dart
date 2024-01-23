@@ -1,4 +1,9 @@
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:flutter_application_1/naviagtion1.dart";
+import "package:flutter_application_1/navigation.dart";
+import "package:flutter_application_1/signin.dart";
 
 class profileScreen extends StatefulWidget {
   const profileScreen({super.key});
@@ -8,13 +13,47 @@ class profileScreen extends StatefulWidget {
 }
 
 class _profileScreenState extends State<profileScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  String _displayName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserProfile();
+  }
+
+  Future<void> loadUserProfile() async {
+    User? user = _auth.currentUser;
+    DocumentSnapshot userDoc =
+        await _firestore.collection('foods').doc(user!.uid).get();
+
+    setState(() {
+      _displayName = userDoc['displayName'];
+    });
+  }
+
+  Future<void> updateProfile(String newDisplayName) async {
+    User? user = _auth.currentUser;
+    await _firestore.collection('foods').doc(user!.uid).update({
+      'displayName': newDisplayName,
+    });
+
+    loadUserProfile(); // Refresh the UI after updating the profile
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 7, 125, 222),
+        backgroundColor: Color.fromARGB(255, 13, 66, 172),
         leading: IconButton(
-            onPressed: () {}, icon: const Icon(Icons.arrow_back_ios_new)),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => naviagation1()));
+            },
+            icon: const Icon(Icons.arrow_back_ios_new)),
         title: const Text('Profile',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -23,7 +62,8 @@ class _profileScreenState extends State<profileScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, 'Signin');
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Signin()));
               },
               icon: const Icon(Icons.logout_outlined))
         ],
@@ -62,7 +102,7 @@ class _profileScreenState extends State<profileScreen> {
                                 color: Colors.white,
                               ),
                               color: Colors.blue),
-                          child: const Icon(
+                          child: Icon(
                             Icons.edit,
                             color: Colors.white,
                           ),
@@ -84,7 +124,12 @@ class _profileScreenState extends State<profileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => naviagation1()));
+                    },
                     child: const Text(
                       'CANCEL',
                       style: TextStyle(
@@ -92,7 +137,12 @@ class _profileScreenState extends State<profileScreen> {
                     ),
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => naviagation1()));
+                      },
                       child: const Text(
                         'SAVE',
                         style: TextStyle(
